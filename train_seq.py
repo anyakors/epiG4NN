@@ -141,14 +141,13 @@ region = ['chr2','chr4','chr6','chr8','chr10', 'chr11', 'chr12', 'chr13',
 
 
 args = check_argv()
-cell = 'A549'
 
-datadir = os.path.join(f'data_new/{cell}/inputs_numpy/train_newMeth')
+datadir = os.path.join(f'data/inputs_numpy/train_1000nt')
 
 if args.const_lr:
-    checkpoint_path = f"models_new/A549_cls1_seq/checkpoint/"
+    checkpoint_path = f"models/A549_cls1_seq/checkpoint/"
 else:
-    checkpoint_path = f"models_new/A549_cls1_seq/checkpoint/"
+    checkpoint_path = f"models/A549_cls1_seq/checkpoint/"
 # Create a callback that saves the model's weights
 
 cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_path,
@@ -156,18 +155,17 @@ cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_path,
                                                  verbose=1, save_best_only=False,
                                                  save_freq='epoch')
 
-#log_dir = os.path.join(model_dir, "/fit_log")\
 if args.const_lr:
-    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=f"models_new/A549_cls1_seq/log", histogram_freq=1)
+    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=f"models/A549_cls1_seq/log", histogram_freq=1)
 else:
-    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=f"models_new/A549_cls1_seq/log", histogram_freq=1)
+    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=f"models/A549_cls1_seq/log", histogram_freq=1)
 
 es_callback = tf.keras.callbacks.EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=2)
 
 NE = 1
 lr_scheduler = LearningRateScheduler(lr_schedule)
 
-input_shape=(4, 250)
+input_shape=(4, 1000)
 
 model_cnn = model_CNN_full(input_shape=input_shape, no_stacks=args.no_stacks, kernel_size=[args.kernel_size0,args.kernel_size2], dil=[args.dilation1, args.dilation2])
 
