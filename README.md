@@ -7,7 +7,7 @@ This repository contains the scripts for the **epiG4NN** data preparation pipeli
 ## Overview
 
 **epiG4NN** model uses the potential G4 sequence padded to 1000 nucleotides matched with the respective epigenetic data of choice.
-<p align="center"><img width=60% src="https://github.com/anyakors/epiG4NN/blob/main/media/scheme.png"></p>
+<p align="center"><img width=60% src="https://github.com/anyakors/epiG4NN/blob/main/media/scheme.jpeg"></p>
 
 ## Installation
 
