@@ -51,26 +51,22 @@ def lr_schedule_const(epoch):
 def check_argv():
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--kernel_size0', default=11, required=True, type=int, help='kernel size for convolution')
-    parser.add_argument('--kernel_size2', default=11, required=True, type=int, help='kernel size for convolution')
-    parser.add_argument('--no_stacks', default=2, required=True, type=int, help='no RB stacks')
-    parser.add_argument('--dilation1', default=4, required=True, type=int, help='dilation rate 1')
-    parser.add_argument('--dilation2', default=4, required=True, type=int, help='dilation rate 2')
-    parser.add_argument('--batch', default=32, required=True, type=int, help='batch size')
+    parser.add_argument('--kernel_size1', default=11, required=False, type=int, help='kernel size for convolution')
+    parser.add_argument('--kernel_size2', default=11, required=False, type=int, help='kernel size for convolution')
+    parser.add_argument('--no_stacks', default=2, required=False, type=int, help='no RB stacks')
+    parser.add_argument('--dilation1', default=4, required=False, type=int, help='dilation rate 1')
+    parser.add_argument('--dilation2', default=4, required=False, type=int, help='dilation rate 2')
+    parser.add_argument('--batch', default=32, required=False, type=int, help='batch size')
     parser.add_argument('--const_lr', default=False, action='store_true')
-
+    parser.add_argument('--model_name', required=True, type=str, help='model name prefix')
+    parser.add_argument('--inputs', required=True, type=str, help='folder with inputs split by chromosome')
 
     return parser.parse_args()
 
 
-def binarize_labels(labels):
-    #A549: [0.25, 0.5, 0.95, 0.98] [0.00000000e+00 3.53096163e-05 4.08277148e-02 1.01717487e-01] 
-    # ~100K, 20K
-    #293T: [0.25, 0.5, 0.95, 0.98] [0. 0.00223609 0.04327499 0.08719538]
-    # ~100K, 40K
+def binarize_labels(labels, q=4.08277148e-02):
+    #provide a cutoff for label binarization
 
-    # binarization threshold to match the peak called binary labels
-    q = 4.08277148e-02
     labels_ = []
     for x in labels:
         if x<=q:
@@ -139,25 +135,18 @@ region = ['chr2','chr4','chr6','chr8','chr10', 'chr11', 'chr12', 'chr13',
 
 args = check_argv()
 
-datadir = os.path.join(f'data/inputs_numpy/train_1000nt')
+datadir = args.inputs
 
-if args.const_lr:
-    checkpoint_path = f"models/A549_cls1_epi/checkpoint/"
-else:
-    checkpoint_path = f"models/A549_cls1_epi/checkpoint/"
-# Create a callback that saves the model's weights
+if not os.path.exists('data/models'):
+    os.makedirs('data/models')
 
+checkpoint_path = f"data/models/{args.model_name}/checkpoint/"
 cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_path,
                                                  monitor='val_loss', mode='min',
                                                  verbose=1, save_best_only=False,
                                                  save_freq='epoch')
 
-#log_dir = os.path.join(model_dir, "/fit_log")\
-if args.const_lr:
-    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=f"models/A549_cls1_epi/log", histogram_freq=1)
-else:
-    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=f"models/A549_cls1_epi/log", histogram_freq=1)
-
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=f"models/A549_cls1_seq/log", histogram_freq=1)
 es_callback = tf.keras.callbacks.EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=2)
 
 NE = 1
@@ -165,7 +154,7 @@ lr_scheduler = LearningRateScheduler(lr_schedule)
 
 input_shape=(5, 1000)
 
-model_cnn = model_CNN_full(input_shape=input_shape, no_stacks=args.no_stacks, kernel_size=[args.kernel_size0,args.kernel_size2], dil=[args.dilation1, args.dilation2])
+model_cnn = model_CNN_full(input_shape=input_shape, no_stacks=args.no_stacks, kernel_size=[args.kernel_size1,args.kernel_size2], dil=[args.dilation1, args.dilation2])
 
 adam = Adam(learning_rate=0.001)
 
@@ -174,35 +163,34 @@ model_cnn.compile(loss=tf.keras.losses.BinaryCrossentropy(),
                   metrics=tf.keras.metrics.Accuracy())
 ep = 0
 
-# derived from A549 cells; other datasets may have different class weights
 class_weight = {0: 0.34759133131208897, 1: 35.69278}
 
 for _ in range(1):
     
     for chrn in region:
 
+        chr_data_avail = os.listdir(datadir)
+        chr_data_avail = [x.split('.')[0].split('_')[0] for x in chr_data_avail]
+        if chrn not in chr_data_avail:
+            continue
+
         print(f'processing {chrn}...')
         with open(os.path.join(datadir, chrn+'_seqs.npy'), 'rb') as f: 
             seqs = np.load(f)
         with open(os.path.join(datadir, chrn+'_epi.npy'), 'rb') as f: 
-            me3 = np.load(f)
+            epi = np.load(f)
         with open(os.path.join(datadir, chrn+'_labels.npy'), 'rb') as f: 
             labels = np.load(f)
 
-        labels_bin = binarize_labels(labels)
-
         metadata = []
-
-        for s,m3 in tqdm(zip(seqs,me3)):
-            x = np.concatenate((s,m3.reshape(1, -1)), axis=0)
+        for s,e in tqdm(zip(seqs,epi)):
+            x = np.concatenate((s,e.reshape(1,-1)), axis=0)
             metadata.append(x)
-            
-        metadata = np.array(metadata)
 
-        # INPUT SHAPE IS EVERYTHING EXCEPT THE NUMBER OF SAMPLES
-        print('x_train shape:', metadata.shape)
-        print(metadata.shape[0], 'train samples')
-        print('y_train shape:', labels.shape)
+        metadata = np.array(metadata)
+        print(metadata.shape)
+
+        labels_bin = binarize_labels(labels, q=4.08277148e-02)
 
         # TRAINING
 

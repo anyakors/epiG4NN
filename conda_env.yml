@@ -1,4 +1,4 @@
-name: asai
+name: epig4nn
 channels:
   - anaconda
   - conda-forge
@@ -231,4 +231,4 @@ dependencies:
     - werkzeug==1.0.1
     - wrapt==1.12.1
     - yellowbrick==1.4
-prefix: /opt/anaconda3/envs/asai
+prefix: /opt/anaconda3/envs/epig4nn

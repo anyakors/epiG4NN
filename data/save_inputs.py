@@ -80,9 +80,11 @@ def check_argv():
     return parser.parse_args()
 
 
+args = check_argv()
+
 min_max_scaler_labels = MinMaxScaler(feature_range=(0,1))
 
-scores = pd.read_csv('g4_scores_final_norm.bed', delimiter='\t', header=None)
+scores = pd.read_csv('data/g4_scores_final_norm.bed', delimiter='\t', header=None)
 
 print(max(scores[2]))
 scores[2][scores[2] < 0] = 0
@@ -99,7 +101,7 @@ print(len(scores_dict.keys()))
 
 print("Reading PQS file")
 
-PQS = pd.read_csv('PQS_padded.bed', delimiter='\t', header=None)
+PQS = pd.read_csv('data/PQS_padded.bed', delimiter='\t', header=None)
 
 region = ['chr1','chr2','chr3','chr4','chr5','chr6','chr7', 'chr8', 'chr9', 'chr10', 'chr11', 'chr12', 'chr13',
          'chr14', 'chr15', 'chr16','chr17', 'chr18', 'chr19',
@@ -120,7 +122,12 @@ with open(args.hg19, mode='r') as handle:
 
 for chrn in region:
 
-    dir_atac = 'epi_bychr/'
+    dir_atac = 'data/epi_bychr/'
+
+    epi_chr_data_avail = os.listdir(dir_atac)
+    epi_chr_data_avail = [x.split('.')[0] for x in epi_chr_data_avail]
+    if chrn not in epi_chr_data_avail:
+        continue
 
     print("Fetching sequences for PQS...")
 
@@ -168,10 +175,13 @@ for chrn in region:
 
     print(np.shape(input_seqs), np.shape(labels))
 
+    if not os.path.exists('data/inputs_numpy'):
+        os.makedirs('data/inputs_numpy')
+
     if chrn in ['chr1', 'chr3', 'chr5', 'chr7', 'chr9']:
-        writedir = os.path.join('inputs_numpy/test_1000nt')
+        writedir = os.path.join('data/inputs_numpy/test_1000nt')
     else:
-        writedir = os.path.join('inputs_numpy/train_1000nt')
+        writedir = os.path.join('data/inputs_numpy/train_1000nt')
     
     if not os.path.exists(writedir):
         os.makedirs(writedir)
