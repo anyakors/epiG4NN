@@ -84,7 +84,9 @@ After generating the inputs with the `data_prep.sh` script, one can train either
 | `--dilation2` | 4 | dilation rate 2 |
 | `--batch` | 32 | batch size for training |
 | `--const_lr` | False | use constant learning rate |
+| `--q` | 4.08277148e-02 | G4 score binarization threshold |
 
+Note that we use continuous G4 labels for training that are binarized using a predefined threshold `q`. If you are using your own data, this must be redefined.
 Examples of training:
 	
 ```bash
