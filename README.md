@@ -31,7 +31,7 @@ If the prediction is made using a sequence-only model (no epigenetic data), only
 | --- | --- | --- |
 | `--seqs` | None | (required) input `.fa` file with 1000nt G4 sequences |
 | `--epi` | None | (required) input `.csv` file with 1000nt epigenetic arrays |
-| `--model`  | None | (required) model to use: seq, h3k4me3, atac, h3k27ac, h3k4me1, h3k36me3, h3k9me3 |
+| `--model`  | None | (required) model to use: `seq`, `h3k4me3`, `atac`, `h3k27ac`, `h3k4me1`, `h3k36me3`, `h3k9me3` |
 | `--output` | None | (required) output filename prefix; will be saved to output folder |
 
 Examples of usage:
