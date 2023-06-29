@@ -62,6 +62,10 @@ cd ..
 epiG4NN data preparation pipeline requires `bedtools`. To install, run:
 
 ```bash
+#ubuntu
+apt-get install bedtools
+
+#mac
 brew tap homebrew/science
 brew install bedtools
 ```
