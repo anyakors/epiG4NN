@@ -4,6 +4,16 @@
 
 This repository contains the scripts for the **epiG4NN** data preparation pipeline and the code for epiG4NN model training. 
 
+- [epiG4NN: G-quadruplex prediction in live cells using epigenetic data](#epig4nn--g-quadruplex-prediction-in-live-cells-using-epigenetic-data)
+  * [Overview](#overview)
+  * [Installation](#installation)
+  * [G4 formation prediction with pre-trained models](#g4-formation-prediction-with-pre-trained-models)
+  * [Data preparation pipeline for new model training](#data-preparation-pipeline-for-new-model-training)
+  * [Training of new models](#training-of-new-models)
+  * [Utils](#utils)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
 ## Overview
 
 **epiG4NN** model uses the potential G4 sequence padded to 1000 nucleotides matched with the respective epigenetic data of choice.
