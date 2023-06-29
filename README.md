@@ -17,6 +17,7 @@ This repository contains the scripts for the **epiG4NN** data preparation pipeli
 
 **epiG4NN** is a deep convoluational neural network architectiure to predict formation of G-quadruplexes in cells. 
 epiG4NN model uses the potential G4 sequence (PQS) padded to 1000 nucleotides for context, matched with the respective epigenetic data of choice.
+
 You can use epiG4NN to predict G4 formation, given the sequence and the epigenetic mark data (H3K4me3, ATAC-seq, H3K27ac, H3K4me1, H3K36me3 and H3K9me3 are supported), or train your own model.
 <p align="center"><img width=60% src="https://github.com/anyakors/epiG4NN/blob/main/media/scheme.jpeg"></p>
 
