@@ -11,7 +11,7 @@ This repository contains the scripts for the **epiG4NN** data preparation pipeli
 
 ## Installation
 
-Clone the **epiG4NN** repository to a local folder. Use the file `conda_env.yml` to create a `conda` environment:
+Clone the **epiG4NN** repository to a local folder. Use the file `environment.yml` to create a `conda` environment:
 
 ```
 conda env create -f environment.yml
