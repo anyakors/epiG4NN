@@ -5,6 +5,7 @@
 This repository contains the scripts for the **epiG4NN** data preparation pipeline and the code for epiG4NN model training. 
 
 - [epiG4NN: G-quadruplex prediction in live cells using epigenetic data](#epig4nn--g-quadruplex-prediction-in-live-cells-using-epigenetic-data)
+  
   * [Overview](#overview)
   * [Installation](#installation)
   * [G4 formation prediction with pre-trained models](#g4-formation-prediction-with-pre-trained-models)
@@ -12,12 +13,11 @@ This repository contains the scripts for the **epiG4NN** data preparation pipeli
   * [Training of new models](#training-of-new-models)
   * [Utils](#utils)
 
-<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
-
 ## Overview
 
 **epiG4NN** model uses the potential G4 sequence padded to 1000 nucleotides matched with the respective epigenetic data of choice.
 <p align="center"><img width=60% src="https://github.com/anyakors/epiG4NN/blob/main/media/scheme.jpeg"></p>
+
 
 ## Installation
 
@@ -27,6 +27,7 @@ Clone the **epiG4NN** repository to a local folder. Use the file `environment.ym
 conda env create -f environment.yml
 conda activate epig4nn
 ```
+
 
 ## G4 formation prediction with pre-trained models
 
@@ -44,6 +45,7 @@ If the prediction is made using a sequence-only model (no epigenetic data), only
 | `--model`  | None | (required) model to use: `seq`, `h3k4me3`, `atac`, `h3k27ac`, `h3k4me1`, `h3k36me3`, `h3k9me3` |
 | `--output` | None | (required) output filename prefix; will be saved to output folder |
 
+
 Examples of usage:
 
 ```bash
@@ -55,6 +57,7 @@ python predict.py --seqs data/pqs_chr22.txt --model seq --output out_seq
 ```
 
 The output will be saved to the `output` folder with the specified prefix.
+
 
 ## Data preparation pipeline for new model training
 
@@ -77,6 +80,7 @@ bash data_prep.sh
 ```
 
 This script will save the preprocessed `.npy` inputs into `data/inputs_numpy/train_1000nt`.
+
 
 ## Training of new models
 
@@ -107,5 +111,9 @@ python train_epi.py --inputs data/inputs_numpy/train_1000nt --model_name tiny_29
 python train_seq.py --inputs data/inputs_numpy/train_1000nt --model_name tiny_293T_seq
 ```
 
+
 ## Utils
 `PQS_search.py` file contains a python re implementation for PQS search in the human genome
+
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
