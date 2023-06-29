@@ -6,8 +6,6 @@ import datetime
 import os
 import argparse
 
-import matplotlib.pyplot as plt
-
 import tensorflow as tf
 
 from tensorflow.keras.optimizers import Adam
@@ -60,6 +58,7 @@ def check_argv():
     parser.add_argument('--const_lr', default=False, action='store_true')
     parser.add_argument('--model_name', required=True, type=str, help='model name prefix')
     parser.add_argument('--inputs', required=True, type=str, help='folder with inputs split by chromosome')
+    parser.add_argument('--q', required=False, default=4.08277148e-02, type=float, help='G4 score binarization threshold')
 
     return parser.parse_args()
 
@@ -148,7 +147,7 @@ cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath=checkpoint_path,
                                                  verbose=1, save_best_only=False,
                                                  save_freq='epoch')
 
-tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=f"models/{args.model_name}/log", histogram_freq=1)
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=f"data/models/{args.model_name}/log", histogram_freq=1)
 es_callback = tf.keras.callbacks.EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=2)
 
 NE = 1
@@ -182,7 +181,7 @@ for _ in range(1):
         with open(os.path.join(datadir, chrn+'_labels.npy'), 'rb') as f: 
             labels = np.load(f)
 
-        labels_bin = binarize_labels(labels, q=4.08277148e-02)
+        labels_bin = binarize_labels(labels, q=args.q)
 
         # TRAINING
 

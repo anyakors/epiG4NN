@@ -8,7 +8,7 @@ stop_stage=3
 
 epigen_data=data/tiny/ENCFF315TAU_chr22.bedgraph
 g4_scores_file=data/tiny/GSE133379_chr22.bedgraph
-hg19=data/hg19.fa
+hg19=../CSI_work/hg19.fa
 
 # 0. Sorting the data files
 
@@ -63,7 +63,7 @@ if [ ${stage} -le 2 ] && [ ${stop_stage} -ge 2 ]; then
 fi
 
 
-# 8. Prepare input from the generated files
+# 3. Prepare input from the generated files
 
 if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
 
@@ -78,6 +78,8 @@ if [ ${stage} -le 3 ] && [ ${stop_stage} -ge 3 ]; then
     python data/save_inputs.py \
         --hg19 $hg19 \
 
-    rm epi_final* epi_intersect.bed epi_sorted.bgr g4_scores_final.bed g4_scores_intersect.bed g4_scores_sorted.bgr
+    cd data/
+    rm epi_final* epi_intersect.bed epi_sorted.bgr g4_scores_final*bed g4_scores_intersect.bed g4_scores_sorted.bgr 
+    rm -r epi_bychr/
 
 fi
