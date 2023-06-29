@@ -8,7 +8,7 @@ stop_stage=3
 
 epigen_data=data/tiny/ENCFF315TAU_chr22.bedgraph
 g4_scores_file=data/tiny/GSE133379_chr22.bedgraph
-hg19=../CSI_work/hg19.fa
+hg19=data/hg19.fa
 
 # 0. Sorting the data files
 
