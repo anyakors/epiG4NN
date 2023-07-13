@@ -1,5 +1,7 @@
 <p align="center"><img width=50% src="https://github.com/anyakors/epiG4NN/blob/main/media/logo.png"></p>
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8144456.svg)](https://doi.org/10.5281/zenodo.8144456)
+
 # epiG4NN: G-quadruplex prediction in live cells using epigenetic data
 
 This repository contains the scripts for the **epiG4NN** data preparation pipeline and the code for epiG4NN model training. 
